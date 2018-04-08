@@ -1,0 +1,35 @@
+stages:
+  - build
+
+build image:
+  stage: build
+  image: docker:git
+  services:
+  - docker:dind
+  script:
+    - build_terraform
+
+.auto_devops: &auto_devops |
+  [[ "$TRACE" ]] && set -x
+  export CI_APPLICATION_TAG=$CI_COMMIT_SHA
+  [[ "$CI_APPLICATION_TAG" = "master" ]] && export CI_APPLICATION_TAG="latest"
+  [[ "$CI_COMMIT_TAG" ]] && export CI_APPLICATION_TAG=$CI_COMMIT_TAG
+
+  build_terraform() {
+    export CI_APPLICATION_REPOSITORY=$CI_REGISTRY_IMAGE/hetzner
+    docker build --pull --rm -t "$CI_APPLICATION_REPOSITORY:$CI_APPLICATION_TAG" hetzner/
+
+    if [[ -n "$CI_REGISTRY_USER" ]]; then
+      echo "Logging to GitLab Container Registry with CI credentials..."
+      docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+      echo ""
+    fi
+
+    echo "Pushing to GitLab Container Registry..."
+    docker push "$CI_APPLICATION_REPOSITORY:$CI_APPLICATION_TAG"
+    echo ""
+  }
+
+
+before_script:
+  - *auto_devops
