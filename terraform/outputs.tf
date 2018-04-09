@@ -1,3 +1,3 @@
-output "master_ips" {
-  value = ["${hcloud_server.master.*.ipv4_address}"]
+output "rancher_ips" {
+  value = ["${hcloud_server.rancher.*.ipv4_address}"]
 }

@@ -13,3 +13,11 @@ variable "ssh_public_key" {
 variable "docker_version" {
   default = "17.03"
 }
+
+variable "rancher_password" {
+  default = "admin"
+}
+
+variable "rancher_version" {
+  default = "preview"
+}
