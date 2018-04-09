@@ -6,6 +6,7 @@ services:
           context: hetzner
           args:
             - VCS_REF="0.1"
+        entrypoint: make
         command: 
            - entrypoint.sh
         volumes:
