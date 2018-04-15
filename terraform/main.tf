@@ -3,7 +3,7 @@ provider "hcloud" {
 }
 
 resource "hcloud_ssh_key" "admin" {
-  name       = "admin"
+  name       = "${var.ssh_key_name}"
   public_key = "${file(var.ssh_public_key)}"
 }
 

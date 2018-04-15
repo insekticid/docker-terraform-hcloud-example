@@ -1,5 +1,9 @@
 variable "hcloud_token" {}
 
+variable "ssh_key_name" {
+  default = "admin@example.com"
+}
+
 variable "ssh_private_key" {
   description = "Private Key to access the machines"
   default     = "~/.ssh/id_ed25519"
