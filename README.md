@@ -10,6 +10,7 @@ How to setup?
 * cp .env.dist .env
 * edit .env variables and save
 * run: 
+  * docker-compose run --rm terraform init
   * docker-compose run --rm terraform plan
   * docker-compose run --rm terraform apply
   * docker-compose run --rm terraform destroy

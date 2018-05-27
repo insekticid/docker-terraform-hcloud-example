@@ -7,13 +7,13 @@ resource "hcloud_ssh_key" "admin" {
   public_key = "${file(var.ssh_public_key)}"
 }
 
-resource "hcloud_server" "rancher" {
+resource "hcloud_server" "k8s" {
   count       = "1"
-  name        = "rancher"
+  name        = "node-0"
   server_type = "cx11-ceph"
-  image       = "ubuntu-16.04"
+  image       = "ubuntu-18.04"
+  location    = "fsn1"
   ssh_keys    = ["${hcloud_ssh_key.admin.id}"]
-  keep_disk   = "true"
 
   connection {
     private_key = "${file(var.ssh_private_key)}"
@@ -34,7 +34,7 @@ resource "hcloud_server" "rancher" {
   }
 
   provisioner "remote-exec" {
-    inline = "RANCHER_VERSION=${var.rancher_version} bash /root/rancher.sh"
+    inline = "RANCHER_VERSION=${var.rancher_version} ACME_DOMAIN=${var.acme_domain} bash /root/rancher.sh"
   }
   
   provisioner "file" {
@@ -53,19 +53,20 @@ resource "hcloud_server" "rancher" {
 
   provisioner "remote-exec" {
     inline = [
-        "RANCHER_SERVER_ADDRESS=${hcloud_server.rancher.0.ipv4_address} RANCHER_PASSWORD=${var.rancher_password} bash /root/rancher_change_password.sh",
+        "RANCHER_SERVER_ADDRESS=${hcloud_server.k8s.0.ipv4_address} RANCHER_PASSWORD=${var.rancher_password} RANCHER_CLUSTER_NAME=${var.rancher_cluster_name} bash /root/rancher_change_password.sh",
     ]
   }
 }
 
-resource "hcloud_server" "rancher-etcd-control-worker" {
+resource "hcloud_server" "k8s-etcd-control-worker" {
   count       = "3"
-  name        = "${count.index == 0 ? "gitlab" : "node${count.index}"}"
-  server_type = "cx11"
-  image       = "ubuntu-16.04"
+  name        = "${count.index == 0 ? "gitlab" : "node-${count.index}"}"
+  server_type = "cx11-ceph"
+  image       = "ubuntu-18.04"
+  location    = "fsn1"
   ssh_keys    = ["${hcloud_ssh_key.admin.id}"]
   
-  depends_on = ["hcloud_server.rancher"]
+  depends_on = ["hcloud_server.k8s"]
 
   connection {
     private_key = "${file(var.ssh_private_key)}"
@@ -87,7 +88,7 @@ resource "hcloud_server" "rancher-etcd-control-worker" {
   
   provisioner "remote-exec" {
     inline = [
-        "RANCHER_SERVER_ADDRESS=${hcloud_server.rancher.0.ipv4_address} RANCHER_PASSWORD=${var.rancher_password} bash /root/rancher_agent_command.sh"
+        "RANCHER_SERVER_ADDRESS=${hcloud_server.k8s.0.ipv4_address} RANCHER_PASSWORD=${var.rancher_password} bash /root/rancher_agent_command.sh"
     ]
   }
     

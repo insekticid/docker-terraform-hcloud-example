@@ -15,7 +15,7 @@ variable "ssh_public_key" {
 }
 
 variable "docker_version" {
-  default = "17.03"
+  default = "17"
 }
 
 variable "rancher_password" {
@@ -23,5 +23,13 @@ variable "rancher_password" {
 }
 
 variable "rancher_version" {
-  default = "preview"
+  default = "v2.0.2"
+}
+
+variable "acme_domain" {
+  default = "example.com"
+}
+
+variable "rancher_cluster_name" {
+  default = "playground"
 }
