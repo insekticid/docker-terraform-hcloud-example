@@ -15,14 +15,14 @@ apt-get -qq install -y \
     ca-certificates \
     curl \
     jq \
-    software-properties-common \
-    docker.io
+    software-properties-common
+
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
 add-apt-repository \
    "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
    $(lsb_release -cs) \
-   stable"
-#apt-get -qq update && apt-get -qq install -y docker.io
+   edge stable"
+apt-get -qq update && apt-get -qq install -y docker.ce
 
 cat > /etc/docker/daemon.json <<EOF
 {
