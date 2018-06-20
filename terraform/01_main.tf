@@ -53,7 +53,7 @@ resource "hcloud_server" "k8s" {
 
   provisioner "remote-exec" {
     inline = [
-        "RANCHER_SERVER_ADDRESS=${hcloud_server.k8s.0.ipv4_address} RANCHER_PASSWORD=${var.rancher_password} RANCHER_CLUSTER_NAME=${var.rancher_cluster_name} bash /root/rancher_change_password.sh",
+        "RANCHER_SERVER_ADDRESS=${hcloud_server.k8s.0.ipv4_address} RANCHER_PASSWORD=${var.rancher_password} RANCHER_KUBERNETES_VERSION=${var.rancher_kubernetes_version} RANCHER_CLUSTER_NAME=${var.rancher_cluster_name} bash /root/rancher_change_password.sh",
     ]
   }
 }

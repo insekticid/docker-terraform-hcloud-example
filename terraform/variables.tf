@@ -23,7 +23,7 @@ variable "rancher_password" {
 }
 
 variable "rancher_version" {
-  default = "v2.0.2"
+  default = "v2.0.3-rc1"
 }
 
 variable "acme_domain" {
@@ -32,4 +32,8 @@ variable "acme_domain" {
 
 variable "rancher_cluster_name" {
   default = "playground"
+}
+
+variable "rancher_kubernetes_version" {
+  default = "v1.10.3-rancher2"
 }
