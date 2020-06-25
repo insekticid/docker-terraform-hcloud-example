@@ -5,16 +5,19 @@ services:
         build:
           context: hetzner
           args:
-            - VCS_REF="0.1"
+            - VCS_REF="0.2"
         entrypoint: make
         command: 
            - entrypoint.sh
+        # command: 
+        #    - 0.12upgrade
+        #    - -yes                       
         volumes:
            - ./terraform:/terraform
            - ./entrypoint.sh:/usr/local/bin/entrypoint.sh
            #- $SSH_AUTH_SOCK:$SSH_AUTH_SOCK
-           #- ~/.ssh/id_ed25519.pub:~/.ssh/id_ed25519.pub
-           #- ~/.ssh/id_ed25519:~/.ssh/id_ed25519
+           - ~/.ssh/pb1stic1.pub:/pb1stic1.pub
+           - ~/.ssh/pb1stic1:/pb1stic1
         env_file: .env
         #environment:
            #- SSH_AUTH_SOCK

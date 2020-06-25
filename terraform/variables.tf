@@ -1,4 +1,5 @@
-variable "hcloud_token" {}
+variable "hcloud_token" {
+}
 
 variable "ssh_key_name" {
   default = "admin@example.com"
@@ -6,12 +7,12 @@ variable "ssh_key_name" {
 
 variable "ssh_private_key" {
   description = "Private Key to access the machines"
-  default     = "~/.ssh/id_ed25519"
+  default     = "~/.ssh/pb1stic1"
 }
 
 variable "ssh_public_key" {
   description = "Public Key to authorized the access for the machines"
-  default     = "~/.ssh/id_ed25519.pub"
+  default     = "~/.ssh/pb1stic1.pub"
 }
 
 variable "docker_version" {
@@ -37,3 +38,4 @@ variable "rancher_cluster_name" {
 variable "rancher_kubernetes_version" {
   default = "v1.10.3-rancher2"
 }
+
