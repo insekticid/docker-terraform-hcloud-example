@@ -2,6 +2,7 @@
 *.tfplan
 *.tfstate.backup
 .env
+/terraform/terraform.tfvars
 /terraform/terraform.tfstate
 /terraform/.terraform.tfstate.lock.info
 id_ed25519.pub
