@@ -7,15 +7,16 @@ RANCHER_PASSWORD=${RANCHER_PASSWORD:-admin}
 # Login
 LOGINRESPONSE=`curl -s https://${RANCHER_SERVER_ADDRESS}/v3-public/localProviders/local?action=login -H 'content-type: application/json' --data-binary '{"username":"admin","password":"'"${RANCHER_PASSWORD}"'"}' --insecure`
 LOGINTOKEN=`echo $LOGINRESPONSE | jq -r .token`
-echo $LOGINTOKEN
+echo "Login-Token:" $LOGINTOKEN
 
 # Create API key
 APIRESPONSE=`curl -s https://${RANCHER_SERVER_ADDRESS}/v3/token -H 'content-type: application/json' -H "Authorization: Bearer $LOGINTOKEN" --data-binary '{"type":"token","description":"automation"}' --insecure`
 # Extract and store token
 APITOKEN=`echo $APIRESPONSE | jq -r .token`
-echo $APITOKEN
+echo "API-Token:" $APITOKEN
 
 # Generate docker run
+echo 'curl -s -H \"Authorization: Bearer $APITOKEN\" https://${RANCHER_SERVER_ADDRESS}/v3/clusterregistrationtokens --insecure | jq -r .data[0].nodeCommand'
 AGENTCOMMAND=`curl -s -H "Authorization: Bearer $APITOKEN" https://${RANCHER_SERVER_ADDRESS}/v3/clusterregistrationtokens --insecure | jq -r .data[0].nodeCommand`
 ROLEFLAGS="--etcd --controlplane --worker"
 

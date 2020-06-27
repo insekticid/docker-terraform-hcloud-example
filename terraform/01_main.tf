@@ -27,7 +27,10 @@ resource "hcloud_server" "k8s" {
   }
 
   provisioner "remote-exec" {
-    inline = ["DOCKER_VERSION=${var.docker_version}", "bash", "/root/bootstrap.sh"]
+    inline = [
+      "DOCKER_VERSION=${var.docker_version} bash /root/bootstrap.sh",
+      "echo \"Docker Version:\" $DOCKER_VERSION",
+    ]
   }
 
   provisioner "file" {
@@ -36,7 +39,11 @@ resource "hcloud_server" "k8s" {
   }
 
   provisioner "remote-exec" {
-    inline = ["RANCHER_VERSION=${var.rancher_version}", "ACME_DOMAIN=${var.acme_domain}", "bash",  "/root/rancher.sh"]
+    inline = [
+      "RANCHER_VERSION=${var.rancher_version} ACME_DOMAIN=${var.acme_domain} bash /root/rancher.sh",
+      "echo \"Rancher Version:\" $RANCHER_VERSION",
+      "echo \"ACME Domain:\" $ACME_DOMAIN",
+    ]
   }
 
   provisioner "file" {
@@ -45,7 +52,7 @@ resource "hcloud_server" "k8s" {
   }
 
   provisioner "remote-exec" {
-    inline = ["bash", "/root/kubectl.sh"]
+    inline = ["bash /root/kubectl.sh"]
   }
 
   provisioner "file" {
@@ -55,7 +62,11 @@ resource "hcloud_server" "k8s" {
 
   provisioner "remote-exec" {
     inline = [
-      "RANCHER_SERVER_ADDRESS=${hcloud_server.k8s[0].ipv4_address}", "RANCHER_PASSWORD=${var.rancher_password}", "RANCHER_KUBERNETES_VERSION=${var.rancher_kubernetes_version}", "RANCHER_CLUSTER_NAME=${var.rancher_cluster_name}", "bash", "/root/rancher_change_password.sh"
+      "RANCHER_SERVER_ADDRESS=${hcloud_server.k8s[0].ipv4_address} RANCHER_PASSWORD=${var.rancher_password} RANCHER_KUBERNETES_VERSION=${var.rancher_kubernetes_version} RANCHER_CLUSTER_NAME=${var.rancher_cluster_name} bash /root/rancher_change_password.sh",
+      "echo \"Rancher Server Address:\" $RANCHER_SERVER_ADDRESS",
+      "echo \"Rancher Password:\" $RANCHER_PASSWORD",
+      "echo \"Rancher Kubernetes Version:\" $RANCHER_KUBERNETES_VERSION",
+      "echo \"Rancher Cluster Name:\" $RANCHER_VERSION",
     ]
   }
 }
@@ -82,7 +93,10 @@ resource "hcloud_server" "k8s-etcd-control-worker" {
   }
 
   provisioner "remote-exec" {
-    inline = ["DOCKER_VERSION=${var.docker_version}", "bash", "/root/bootstrap.sh"]
+    inline = [
+      "echo \"Docker Version:\" $DOCKER_VERSION",
+      "DOCKER_VERSION=${var.docker_version} bash /root/bootstrap.sh",
+    ]
   }
 
   provisioner "file" {
@@ -92,7 +106,9 @@ resource "hcloud_server" "k8s-etcd-control-worker" {
 
   provisioner "remote-exec" {
     inline = [
-      "RANCHER_SERVER_ADDRESS=${hcloud_server.k8s[0].ipv4_address}", "RANCHER_PASSWORD=${var.rancher_password}", "bash", "/root/rancher_agent_command.sh"
+      "echo \"Rancher Server Address:\" $RANCHER_SERVER_ADDRESS",
+      "echo \"Rancher Password:\" $RANCHER_PASSWORD",
+      "RANCHER_SERVER_ADDRESS=${hcloud_server.k8s[0].ipv4_address} RANCHER_PASSWORD=${var.rancher_password} bash /root/rancher_agent_command.sh",
     ]
   }
 
@@ -102,7 +118,7 @@ resource "hcloud_server" "k8s-etcd-control-worker" {
   }
 
   provisioner "remote-exec" {
-    inline = ["bash", "/root/kubectl.sh"]
+    inline = ["bash /root/kubectl.sh"]
   }
 }
 

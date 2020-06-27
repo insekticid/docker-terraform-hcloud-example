@@ -9,7 +9,7 @@ resource "hcloud_floating_ip" "master" {
   description   = "lb"
   server_id     = local.instance_id
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 }
 
